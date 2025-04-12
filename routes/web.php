@@ -35,15 +35,17 @@ Route::middleware(['guest'])->group(function () {
 Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware(['role:admin,petugas'])->group(function () {
+    Route::resource('/pendaftaranPasien', PasienController::class);
+    Route::resource('/kunjungan', KunjunganController::class);
 });
-Route::resource('/pendaftaranPasien', PasienController::class);
-Route::resource('/kunjungan', KunjunganController::class);
 
 Route::middleware(['role:admin,dokter'])->group(function () {
     Route::resource('/tindakan', TindakanController::class);
     Route::resource('/obat', ObatController::class);
 });
-Route::resource('/pembayaran', PembayaranController::class);
+Route::middleware(['role:admin,kasir'])->group(function () {
+    Route::resource('/pembayaran', PembayaranController::class);
+});
 
 
 Route::resource('/pegawai', PegawaiController::class)->middleware('admin');
